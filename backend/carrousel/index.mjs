@@ -11,7 +11,7 @@ Function that reads the contents from an S3 bucket and returns all object urls.
 export const handler = async(event) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
     
-    const bucketName = 'carrousel';
+    const bucketName = process.env.S3_BUCKET;
     let body;
     let statusCode = '200';
     const headers = {

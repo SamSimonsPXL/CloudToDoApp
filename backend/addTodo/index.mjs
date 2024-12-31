@@ -12,7 +12,7 @@ Make sure the Lambda has the correct execution role(s)
 export const handler = async(event) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
     
-    const DYNAMODBTABLENAME = 'todo';
+    const DYNAMODBTABLENAME = process.env.DYNAMODB_TABLE;
     let body;
     let statusCode = '200';
     const headers = {
@@ -22,9 +22,14 @@ export const handler = async(event) => {
         "Access-Control-Allow-Methods": "*"
     };
     const client = new DynamoDBClient({ region: 'us-east-1' });
-    
+
     try{
         const item = JSON.parse(event.body);
+        
+        if (!item.hasOwnProperty('completed')) {
+            item.completed = false;
+        }
+
         if(!item.title || !item.label)
             throw new Error("Missing title or label property");
         const postInput = {
